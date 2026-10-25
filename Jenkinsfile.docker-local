@@ -1,0 +1,25 @@
+pipeline {
+    agent any
+    environment {
+        IMAGE_NAME = "laravel-local-app"
+    }
+    stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+        stage('Build Image') {
+            steps {
+                bat 'docker build -t %IMAGE_NAME% -f Dockerfile.local .'
+            }
+        }
+        stage('Deploy Container') {
+            steps {
+                // Ignore errors if the container doesn't exist yet, then run the new one on port 8000
+                bat 'docker rm -f laravel-container || exit 0'
+                bat 'docker run -d -p 8000:80 --name laravel-container %IMAGE_NAME%'
+            }
+        }
+    }
+}
