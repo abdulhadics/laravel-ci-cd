@@ -1,0 +1,23 @@
+pipeline {
+    agent any
+    stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+        stage('Install Dependencies') {
+            steps {
+                // If your Jenkins server is running natively on Windows, change 'sh' to 'bat' and 'cp' to 'copy'
+                sh 'composer install --no-interaction --prefer-dist --optimize-autoloader'
+                sh 'cp .env.example .env'
+                sh 'php artisan key:generate'
+            }
+        }
+        stage('Test') {
+            steps {
+                sh 'php artisan test'
+            }
+        }
+    }
+}
