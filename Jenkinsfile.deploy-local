@@ -1,0 +1,21 @@
+pipeline {
+    agent any
+    environment {
+        // The local folder on your Windows machine where the app will be "deployed"
+        DEPLOY_DIR = "C:\\laravel-local-deployment"
+    }
+    stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+        stage('Deploy Locally') {
+            steps {
+                // Create the directory if it doesn't exist, then copy the files over
+                bat 'if not exist "%DEPLOY_DIR%" mkdir "%DEPLOY_DIR%"'
+                bat 'xcopy . "%DEPLOY_DIR%" /E /C /I /Q /H /R /Y'
+            }
+        }
+    }
+}
