@@ -21,7 +21,7 @@ pipeline {
             steps {
                 sshagent(credentials: ['vm-deploy-key']) {
                     bat "scp -P %SSH_PORT% -o StrictHostKeyChecking=no app.zip %VM_USER%@%VM_IP%:~/"
-                    bat """ssh -p %SSH_PORT% -o StrictHostKeyChecking=no %VM_USER%@%VM_IP% "sudo mkdir -p %DEPLOY_DIR% && sudo chown %VM_USER%:%VM_USER% %DEPLOY_DIR% && sudo apt-get update && sudo apt-get install -y unzip php-cli composer && unzip -o ~/app.zip -d %DEPLOY_DIR% && cd %DEPLOY_DIR% && composer install --no-dev && cp .env.example .env && php artisan key:generate" """
+                    bat """ssh -p %SSH_PORT% -o StrictHostKeyChecking=no %VM_USER%@%VM_IP% "sudo mkdir -p %DEPLOY_DIR% && sudo chown %VM_USER%:%VM_USER% %DEPLOY_DIR% && sudo apt-get update && sudo apt-get install -y unzip php-cli composer php-xml && unzip -o ~/app.zip -d %DEPLOY_DIR% && cd %DEPLOY_DIR% && composer install --no-dev && cp .env.example .env && php artisan key:generate" """
                 }
             }
         }
